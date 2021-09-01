@@ -8,7 +8,6 @@ const { telegramConfig } = require("../config");
 
 Logger.setLevel("none"); // no logging
 
-let a = null;
 class TelegramClass {
   constructor() {
     this.client = null;

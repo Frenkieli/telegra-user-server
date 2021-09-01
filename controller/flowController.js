@@ -22,16 +22,19 @@ class FlowController {
 
     switch (selectOption) {
       case "登入":
-          this.loginTelegram();
+        this.loginTelegram();
+        break;
+
+      case "刪除成員":
+        this.deleteMember();
         break;
 
       case "註冊新成員":
-          this.registerNewMember();
+        this.registerNewMember();
         break;
-        
 
       case "離開":
-          this.leaveApp();
+        this.leaveApp();
         break;
 
       default:
@@ -41,33 +44,46 @@ class FlowController {
 
   async loginTelegram() {
     let member = await interfaceItem.selectUser();
-    if(member) {
-      let memberData = dataCenter.getData("userMember")[member.split(".")[0] - 1];
-      if(await telegramItem.login(memberData.number)) {
+    if (member) {
+      let memberData =
+        dataCenter.getData("userMember")[member.split(".")[0] - 1];
+      if (await telegramItem.login(memberData.number)) {
         console.log("記錄人員");
         dataCenter.setData("user", memberData);
       }
       this.home();
-    }else {
+    } else {
+      this.home();
+    }
+  }
+
+  async deleteMember() {
+    let result = await interfaceItem.deleteMember();
+    let data = dataCenter.getData("userMember");
+
+    if (result) {
+      for (let i = result.length - 1; i >= 0; i--) {
+        data.splice(Number(result[i].split(".")[0]) - 1, 1);
+        dataCenter.setData("userMember", data);
+      }
+    } else {
       this.home();
     }
   }
 
   async registerNewMember() {
     let result = await interfaceItem.registerNewMember();
-    var data = dataCenter.getData("userMember");
+    let data = dataCenter.getData("userMember");
     console.log(data);
     data.push(result);
     dataCenter.setData("userMember", data);
     this.home();
   }
 
-  leaveApp() {
+  async leaveApp() {
     interfaceItem.clearView();
-
     console.log("按 任意鍵 離開程式");
-    process.stdin.setRawMode(true);
-    process.stdin.resume();
+    await interfaceItem.pressToContinue();
     process.stdin.on("data", process.exit.bind(process, 0));
   }
 }
