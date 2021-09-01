@@ -2,6 +2,11 @@ const interfaceItem = require("../view/interfaceItem");
 const dataCenter = require("../dataCenter");
 const telegramItem = require("../modules/telegramItem");
 
+/**
+ * @description 流程控制的實體
+ *
+ * @class FlowController
+ */
 class FlowController {
   constructor() {}
   static getInstance() {
@@ -11,12 +16,22 @@ class FlowController {
     return this.instance;
   }
 
+  /**
+   * @description 進來的第一步
+   *
+   * @memberof FlowController
+   */
   start() {
     interfaceItem.clearView();
     interfaceItem.welcome();
     this.home();
   }
 
+  /**
+   * @description 主選單
+   *
+   * @memberof FlowController
+   */
   async home() {
     let selectOption = await interfaceItem.homeSelect();
 
@@ -42,6 +57,11 @@ class FlowController {
     }
   }
 
+  /**
+   * @description 登入 telegram
+   *
+   * @memberof FlowController
+   */
   async loginTelegram() {
     let member = await interfaceItem.selectUser();
     if (member) {
@@ -57,6 +77,11 @@ class FlowController {
     }
   }
 
+  /**
+   * @description 刪除會員
+   *
+   * @memberof FlowController
+   */
   async deleteMember() {
     let result = await interfaceItem.deleteMember();
     let data = dataCenter.getData("userMember");
@@ -71,6 +96,11 @@ class FlowController {
     }
   }
 
+  /**
+   * @description 註冊新成員
+   *
+   * @memberof FlowController
+   */
   async registerNewMember() {
     let result = await interfaceItem.registerNewMember();
     let data = dataCenter.getData("userMember");
@@ -80,6 +110,11 @@ class FlowController {
     this.home();
   }
 
+  /**
+   * @description 關閉 app
+   *
+   * @memberof FlowController
+   */
   async leaveApp() {
     interfaceItem.clearView();
     console.log("按 任意鍵 離開程式");

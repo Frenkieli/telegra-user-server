@@ -8,6 +8,11 @@ const { telegramConfig } = require("../config");
 
 Logger.setLevel("none"); // no logging
 
+/**
+ * @description telegram 實體套件
+ *
+ * @class TelegramClass
+ */
 class TelegramClass {
   constructor() {
     this.client = null;
@@ -19,6 +24,11 @@ class TelegramClass {
     return this.instance;
   }
 
+  /**
+   * @description 初始化 telegram 實體
+   *
+   * @memberof TelegramClass
+   */
   init() {
     this.client = new TelegramClient(
       new StringSession(""),
@@ -28,6 +38,13 @@ class TelegramClass {
     );
   }
 
+  /**
+   * @description 登入 telegram
+   *
+   * @param {string} number +886123456789 telegram account number
+   * @return {*}
+   * @memberof TelegramClass
+   */
   async login(number) {
     await this.client.start({
       phoneNumber: number,
@@ -44,7 +61,6 @@ class TelegramClass {
 
     return true;
   }
-
 }
 
 const telegramItem = TelegramClass.getInstance();

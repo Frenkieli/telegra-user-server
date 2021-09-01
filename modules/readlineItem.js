@@ -1,5 +1,10 @@
 const readline = require("readline");
 
+/**
+ * @description readlint 實體
+ *
+ * @class ReadlineClass
+ */
 class ReadlineClass {
   constructor() {}
   static getInstance() {
@@ -8,11 +13,6 @@ class ReadlineClass {
     }
     return this.instance;
   }
-
-  inputText() {
-    
-  }
-
 }
 
 const readlineItem = ReadlineClass.getInstance();

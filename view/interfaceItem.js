@@ -2,6 +2,11 @@ const input = require("input");
 
 const dataCenter = require("../dataCenter");
 
+/**
+ * @description 主要畫面
+ *
+ * @class InterfaceClass
+ */
 class InterfaceClass {
   constructor() {}
 
@@ -12,6 +17,11 @@ class InterfaceClass {
     return this.instance;
   }
 
+  /**
+   * @description welcome
+   *
+   * @memberof InterfaceClass
+   */
   welcome() {
     console.log("=======================================================");
     console.log("=======================================================");
@@ -22,6 +32,12 @@ class InterfaceClass {
     console.log("=======================================================");
   }
 
+  /**
+   * @description 主選單
+   *
+   * @return {string} pick option
+   * @memberof InterfaceClass
+   */
   async homeSelect() {
     let name = dataCenter.getData("user").name || "遊客";
     let option = ["刪除成員", "登入", "註冊新成員", "離開"];
@@ -33,6 +49,12 @@ class InterfaceClass {
     return selectOption;
   }
 
+  /**
+   * @description pick user
+   *
+   * @return {*} user info pf false
+   * @memberof InterfaceClass
+   */
   async selectUser() {
     let userMember = dataCenter.getData("userMember");
     let selectOption = false;
@@ -61,6 +83,12 @@ class InterfaceClass {
     return selectOption;
   }
 
+  /**
+   * @description delete member
+   *
+   * @return {*} array or false
+   * @memberof InterfaceClass
+   */
   async deleteMember() {
     let vm = this;
     let userMember = dataCenter.getData("userMember");
@@ -82,11 +110,11 @@ class InterfaceClass {
           },
         }
       );
-      if(selectOption[selectOption.length - 1] === "取消") {
+      if (selectOption[selectOption.length - 1] === "取消") {
         console.log("正在跳回主頁，按下 任意建 繼續");
         await vm.pressToContinue();
         selectOption = false;
-      };
+      }
     } else {
       console.log("目前沒有成員，按下 任意建 繼續");
       await vm.pressToContinue();
@@ -94,6 +122,12 @@ class InterfaceClass {
     return selectOption;
   }
 
+  /**
+   * @description register member 
+   *
+   * @return {*} object of user info
+   * @memberof InterfaceClass
+   */
   async registerNewMember() {
     let name = null;
     let nameConfirm = false;
@@ -153,21 +187,19 @@ class InterfaceClass {
   }
 
   async pressToContinue() {
-
     return new Promise((resolve) => {
-
       const handler = () => {
         process.stdin.removeListener("data", handler);
         process.stdin.setRawMode(false);
         process.stdin.pause();
-        process.stdout.write("\n")
+        process.stdout.write("\n");
         resolve();
-      }
-      
+      };
+
       process.stdin.resume();
       process.stdin.setRawMode(true);
       process.stdin.once("data", handler);
-    })
+    });
   }
 }
 
