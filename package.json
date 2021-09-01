@@ -1,0 +1,26 @@
+{
+  "name": "telegra-user-server",
+  "version": "1.0.0",
+  "description": "利用後端製作登入telegram的第三方軟體",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Frenkieli/telegra-user-server.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Frenkieli/telegra-user-server/issues"
+  },
+  "homepage": "https://github.com/Frenkieli/telegra-user-server#readme",
+  "dependencies": {
+    "input": "^1.0.1",
+    "nodemon": "^2.0.12",
+    "telegram": "^1.8.10"
+  }
+}
