@@ -48,7 +48,7 @@ class FlowController {
         this.deleteMember();
         break;
 
-      case "顯示聊天頻道":
+      case "顯示頻道":
         this.updateChatList();
         break;
 
@@ -72,7 +72,6 @@ class FlowController {
       let memberData =
         dataCenter.getData("userMember")[member.split(".")[0] - 1];
       if (await telegramItem.login(memberData.number)) {
-        console.log("記錄人員");
         dataCenter.setData("user", memberData);
       }
       this.home();
@@ -95,6 +94,8 @@ class FlowController {
         data.splice(Number(result[i].split(".")[0]) - 1, 1);
         dataCenter.setData("userMember", data);
       }
+      console.log("");
+      this.home();
     } else {
       this.home();
     }
@@ -108,7 +109,6 @@ class FlowController {
   async registerNewMember() {
     let result = await interfaceItem.registerNewMember();
     let data = dataCenter.getData("userMember");
-    console.log(data);
     data.push(result);
     dataCenter.setData("userMember", data);
     this.home();

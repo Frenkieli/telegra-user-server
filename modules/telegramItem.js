@@ -55,7 +55,9 @@ class TelegramClass {
 
     // console.log(); // Save this string to avoid logging in again
 
-    console.log("登入成功");
+    console.log("");
+    console.log("\x1b[36m", "成功登入");
+    console.log("");
     this.client.session.save();
     await this.client.sendMessage("me", { message: "node sevret is online!" });
 

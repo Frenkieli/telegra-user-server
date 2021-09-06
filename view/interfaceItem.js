@@ -42,7 +42,7 @@ class InterfaceClass {
     let name = dataCenter.getData("user").name || "遊客";
     let option = ["登入", "註冊新成員", "離開"];
     if (name !== "遊客") {
-      option.splice(0, 2, ...["顯示聊天頻道", "刪除成員"]);
+      option.splice(0, 2, ...["顯示頻道", "刪除成員"]);
     }
     let selectOption = await input.select(name + " 你好：", option);
 
@@ -174,6 +174,10 @@ class InterfaceClass {
       });
     }
 
+    console.log("");
+    console.log("建立成功");
+    console.log("");
+
     return {
       name,
       number,
@@ -187,6 +191,7 @@ class InterfaceClass {
    */
   showChatList() {
     let chatList = dataCenter.getData("chatList");
+    console.log("");
     for(let i = 0 ; i < chatList.length ; i ++) {
       console.log(chatList[i].title)
     }
