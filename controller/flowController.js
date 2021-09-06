@@ -40,12 +40,16 @@ class FlowController {
         this.loginTelegram();
         break;
 
+      case "註冊新成員":
+        this.registerNewMember();
+        break;
+
       case "刪除成員":
         this.deleteMember();
         break;
 
-      case "註冊新成員":
-        this.registerNewMember();
+      case "顯示聊天頻道":
+        this.updateChatList();
         break;
 
       case "離開":
@@ -119,7 +123,19 @@ class FlowController {
     interfaceItem.clearView();
     console.log("按 任意鍵 離開程式");
     await interfaceItem.pressToContinue();
-    process.stdin.on("data", process.exit.bind(process, 0));
+    process.stdin.on("data", process.exit());
+  }
+
+  /**
+   * @description 獲取資料的同時更新頻道列表
+   *
+   * @memberof FlowController
+   */
+  async updateChatList() {
+    let chatList = await telegramItem.getChatList();
+    dataCenter.setData("chatList", chatList.chats);
+    interfaceItem.showChatList();
+    this.home();
   }
 }
 

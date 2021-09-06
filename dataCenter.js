@@ -13,6 +13,7 @@ class DataCenter {
       name: null,
     };
     this.state.userMember = [];
+    this.state.chatList = [];
   }
 
   static getInstance() {
@@ -25,7 +26,7 @@ class DataCenter {
   /**
    * @description get state data
    *
-   * @param {string} key user | userMember
+   * @param {string} key user | userMember | chatList
    * @return {any} state the data
    * @memberof DataCenter
    */
@@ -36,7 +37,7 @@ class DataCenter {
   /**
    * @description set state data and handle event
    *
-   * @param {string} key user | userMember
+   * @param {string} key user | userMember | chatList
    * @param {any} data state the data
    * @memberof DataCenter
    */

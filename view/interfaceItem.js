@@ -40,9 +40,9 @@ class InterfaceClass {
    */
   async homeSelect() {
     let name = dataCenter.getData("user").name || "遊客";
-    let option = ["刪除成員", "登入", "註冊新成員", "離開"];
+    let option = ["登入", "註冊新成員", "離開"];
     if (name !== "遊客") {
-      option.splice(0, 1, ...["刪除成員"]);
+      option.splice(0, 2, ...["顯示聊天頻道", "刪除成員"]);
     }
     let selectOption = await input.select(name + " 你好：", option);
 
@@ -180,12 +180,25 @@ class InterfaceClass {
     };
   }
 
-  clearView() {
-    process.stdout.write(
-      process.platform === "win32" ? "\x1Bc" : "\x1B[2J\x1B[3J\x1B[H"
-    );
+  /**
+   * @description show chat list data
+   *
+   * @memberof InterfaceClass
+   */
+  showChatList() {
+    let chatList = dataCenter.getData("chatList");
+    for(let i = 0 ; i < chatList.length ; i ++) {
+      console.log(chatList[i].title)
+    }
+    console.log("");
   }
 
+  /**
+   * @description press any to continue
+   *
+   * @return {*} 
+   * @memberof InterfaceClass
+   */
   async pressToContinue() {
     return new Promise((resolve) => {
       const handler = () => {
@@ -200,6 +213,18 @@ class InterfaceClass {
       process.stdin.setRawMode(true);
       process.stdin.once("data", handler);
     });
+  }
+
+
+  /**
+   * @description clear view
+   *
+   * @memberof InterfaceClass
+   */
+  clearView() {
+    process.stdout.write(
+      process.platform === "win32" ? "\x1Bc" : "\x1B[2J\x1B[3J\x1B[H"
+    );
   }
 }
 

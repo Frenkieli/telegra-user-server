@@ -61,6 +61,23 @@ class TelegramClass {
 
     return true;
   }
+
+  /**
+   * @description get chat list
+   *
+   * @return {*} telegram chat data
+   * @memberof TelegramClass
+   */
+  async getChatList() {
+    const allChats = await this.client.invoke(
+      new Api.messages.GetAllChats({
+        exceptIds: [],
+      })
+    );
+
+    return allChats;
+  }
+
 }
 
 const telegramItem = TelegramClass.getInstance();
