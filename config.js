@@ -12,7 +12,8 @@ const telegramConfig = {
 }
 
 const filePath = {
-  userMember: path.resolve(__dirname + "/userMember.json")
+  userMember: path.resolve(__dirname + "/userMember.json"),
+  messageFolder: path.resolve(__dirname + "/message/")
 }
 
 

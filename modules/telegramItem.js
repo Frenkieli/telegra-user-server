@@ -59,7 +59,7 @@ class TelegramClass {
     console.log("\x1b[36m", "成功登入");
     console.log("");
     this.client.session.save();
-    await this.client.sendMessage("me", { message: "node sevret is online!" });
+    await this.client.sendMessage("me", { message: "node sevret is online! " + new Date().toLocaleString()});
 
     return true;
   }
@@ -78,6 +78,23 @@ class TelegramClass {
     );
 
     return allChats;
+  }
+
+  /**
+   * @description sendMessage
+   *
+   * @param {*} id chat id
+   * @param {*} message read txt message
+   * @return {*} 
+   * @memberof TelegramClass
+   */
+  async sendMessage(id, message) {
+    return await this.client.invoke(
+      new Api.messages.SendMessage({
+        peer: Number(id),
+        message: message,
+      })
+    )
   }
 
 }

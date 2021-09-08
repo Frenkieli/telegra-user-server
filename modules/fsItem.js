@@ -6,8 +6,8 @@ const fs = require("fs");
  * @param {string} path file path
  * @return {*} 
  */
-async function readJson(path) {
-  return await fs.readFileSync(path);
+async function readFile(path) {
+  return await fs.readFileSync(path, 'utf8');
 }
 
 /**
@@ -21,7 +21,18 @@ async function saveJson(path, json) {
   return await fs.writeFileSync(path, JSON.stringify(json));
 }
 
+/**
+ * @description read folder file list
+ *
+ * @param {string} path folder path
+ * @return {*} 
+ */
+async function getFolderList(path) {
+  return await fs.readdirSync(path);
+}
+
 module.exports = {
-  readJson,
+  readFile,
   saveJson,
+  getFolderList
 };

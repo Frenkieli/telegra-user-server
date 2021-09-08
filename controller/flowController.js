@@ -1,6 +1,9 @@
+const path = require('path');
 const interfaceItem = require("../view/interfaceItem");
 const dataCenter = require("../dataCenter");
 const telegramItem = require("../modules/telegramItem");
+const fsItem = require("../modules/fsItem");
+const { filePath } = require("../config");
 
 /**
  * @description 流程控制的實體
@@ -52,6 +55,10 @@ class FlowController {
         this.updateChatList();
         break;
 
+      case "發送訊息":
+        this.sendMessage();
+        break;
+
       case "離開":
         this.leaveApp();
         break;
@@ -74,10 +81,8 @@ class FlowController {
       if (await telegramItem.login(memberData.number)) {
         dataCenter.setData("user", memberData);
       }
-      this.home();
-    } else {
-      this.home();
     }
+    this.home();
   }
 
   /**
@@ -95,10 +100,8 @@ class FlowController {
         dataCenter.setData("userMember", data);
       }
       console.log("");
-      this.home();
-    } else {
-      this.home();
     }
+      this.home();
   }
 
   /**
@@ -124,6 +127,63 @@ class FlowController {
     console.log("按 任意鍵 離開程式");
     await interfaceItem.pressToContinue();
     process.stdin.on("data", process.exit());
+  }
+
+  /**
+   * @description select chart list and send message
+   *
+   * @memberof FlowController
+   */
+  async sendMessage() {
+    let selectChatOption = await interfaceItem.selectChatList();
+    
+    if(!selectChatOption) {
+      this.home();
+      return;
+    }
+
+    let selectMessage = await interfaceItem.selectMessageList();
+    
+    if(!selectMessage) {x
+      this.home();
+      return;
+    }
+
+    let message = await fsItem.readFile(path.resolve(filePath.messageFolder + "/" + selectMessage.split(".")[1] + ".txt"));
+    
+    let confirm = await interfaceItem.confirmChatListAndMessage(selectChatOption, message);
+
+    if(confirm) {
+
+      let repeatConfirm = await interfaceItem.repeatConfirm();
+
+      if(repeatConfirm) {
+        let repeatProcess = dataCenter.getData("repeatProcess");
+        repeatProcess.push({
+          chatList: selectChatOption,
+          fileName: selectMessage.split(".")[1] + ".txt",
+          time: repeatConfirm,
+          timeoutInstance: setInterval(() => {
+            for(let i = 0 ; i < selectChatOption.length ; i++) {
+              setTimeout(() => {
+                telegramItem.sendMessage(selectChatOption[i].split("#chatId=")[1], message);
+              }, i * 1000);
+            }
+          }, repeatConfirm * 60 * 1000)
+        })
+
+        interfaceItem.showRepeatProcess();
+
+      }else{
+        for(let i = 0 ; i < selectChatOption.length ; i++) {
+          setTimeout(() => {
+            telegramItem.sendMessage(selectChatOption[i].split("#chatId=")[1], message);
+          }, i * 1000);
+        }
+      }
+    }
+
+    this.home();
   }
 
   /**

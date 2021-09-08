@@ -2,6 +2,10 @@ const input = require("input");
 
 const dataCenter = require("../dataCenter");
 
+const fsItem = require("../modules/fsItem");
+
+const { filePath } = require("../config");
+
 /**
  * @description 主要畫面
  *
@@ -42,7 +46,7 @@ class InterfaceClass {
     let name = dataCenter.getData("user").name || "遊客";
     let option = ["登入", "註冊新成員", "離開"];
     if (name !== "遊客") {
-      option.splice(0, 2, ...["顯示頻道", "刪除成員"]);
+      option.splice(0, 2, ...["發送訊息", "顯示頻道", "刪除成員"]);
     }
     let selectOption = await input.select(name + " 你好：", option);
 
@@ -218,6 +222,164 @@ class InterfaceClass {
       process.stdin.setRawMode(true);
       process.stdin.once("data", handler);
     });
+  }
+
+
+
+  /**
+   * @description select chat option and check
+   *
+   * @memberof InterfaceClass
+   */
+  async selectChatList() {
+    let vm = this;
+    let chatList = dataCenter.getData("chatList");
+    let selectOption = false;
+    if (chatList.length >= 1) {
+      selectOption = await input.checkboxes(
+        "請選擇要傳送的頻道",
+        [
+          ...chatList.map((data, index) => {
+            return index + 1 + "." + data.title + " #chatId=" + data.id;
+          }),
+          "取消",
+        ],
+        {
+          validate(answer) {
+            if (answer.length >= 1) return true;
+
+            return "至少要選擇一個選項";
+          },
+        }
+      );
+      if (selectOption[selectOption.length - 1] === "取消") {
+        console.log("正在跳回主頁，按下 任意建 繼續");
+        await vm.pressToContinue();
+        selectOption = false;
+      }
+    } else {
+      console.log("目前沒有成員，按下 任意建 繼續");
+      await vm.pressToContinue();
+    }
+    return selectOption;
+  }
+
+
+  /**
+   * @description select message option and check
+   *
+   * @return {*} 
+   * @memberof InterfaceClass
+   */
+  async selectMessageList() {
+    let vm = this;
+    let messageList = await fsItem.getFolderList(filePath.messageFolder);
+    console.log(messageList, "messageList");
+    let selectOption = false;
+    if (messageList.length >= 1) {
+      selectOption = await input.select(
+        "請選擇要傳送的訊息",
+        [
+          ...messageList.map((data, index) => {
+            return index + 1 + "." + data;
+          }),
+          "取消",
+        ]
+      );
+      if (selectOption === "取消") {
+        selectOption = false;
+      }
+    } else {
+      console.log("目前沒有訊息文本，按下 任意建 繼續");
+      await vm.pressToContinue();
+    }
+    return selectOption;
+  }
+
+  /**
+   * @description confirm send message
+   *
+   * @param {array} selectChatOption chat list
+   * @param {string} message send txt
+   * @return {*} boolean
+   * @memberof InterfaceClass
+   */
+  async confirmChatListAndMessage(selectChatOption, message) {
+
+    console.log("發送至以下群組:");
+    console.log(selectChatOption.join(","));
+    console.log("訊息:");
+    console.log(message);
+
+
+    let confirm = await input.confirm(
+      "是否要發送這樣的資訊?",
+      {
+        default: true
+      }
+    )
+
+    return confirm;
+
+  }
+
+
+  /**
+   * @description repeat time of interval
+   *
+   * @memberof InterfaceClass
+   */
+  async repeatConfirm() {
+    let repeatConfirm = await input.confirm(
+      "是否重複發送?",
+      {
+        default: false
+      }
+    )
+    if(repeatConfirm) {
+      repeatConfirm = await input.text(
+        "間隔幾分鐘呢?",
+        {
+          default: 5,
+          validate(answer) {
+            let reg = /[0-9]/;
+            if (reg.test(answer)) return true;
+            return "只能為數字";
+          }
+        }
+      )
+    }
+
+    console.log();
+
+    return repeatConfirm;
+  }
+
+  /**
+   * @description print in commission process
+   *
+   * @memberof InterfaceClass
+   */
+  showRepeatProcess() {
+    let repeatProcess = dataCenter.getData("repeatProcess");
+    console.log("正在執行的程序:");
+    if(repeatProcess.length >= 1) {
+      console.log("=======================================================");
+      console.log("");
+      for(let i = 0 ; i < repeatProcess.length ; i++ ){
+        console.log("傳送到: " + repeatProcess[i].chatList.map(str=>{
+          return str.split(".")[1].split(" #")[0]
+        }).join(", "));
+        console.log("對應文本: " + repeatProcess[i].fileName);
+        console.log("間隔時間: " + repeatProcess[i].time + " 分鐘");
+        console.log("");
+        console.log("=======================================================");
+        console.log("");
+      }
+    }else {
+      console.log("尚未有進行中的程序");
+      console.log("");
+    }
   }
 
 

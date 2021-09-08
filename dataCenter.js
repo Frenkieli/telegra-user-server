@@ -1,4 +1,4 @@
-const { readJson, saveJson } = require("./modules/fsItem");
+const { readFile, saveJson } = require("./modules/fsItem");
 const { filePath } = require("./config");
 
 /**
@@ -14,6 +14,13 @@ class DataCenter {
     };
     this.state.userMember = [];
     this.state.chatList = [];
+    // {
+    //   chatList: [],
+    //   fileName: "xxx",
+    //   time: 1,
+    //   timeoutInstance: NodeJS.Timeout 
+    // }
+    this.state.repeatProcess = [];
   }
 
   static getInstance() {
@@ -26,7 +33,7 @@ class DataCenter {
   /**
    * @description get state data
    *
-   * @param {string} key user | userMember | chatList
+   * @param {string} key user | userMember | chatList | repeatProcess
    * @return {any} state the data
    * @memberof DataCenter
    */
@@ -37,7 +44,7 @@ class DataCenter {
   /**
    * @description set state data and handle event
    *
-   * @param {string} key user | userMember | chatList
+   * @param {string} key user | userMember | chatList | repeatProcess
    * @param {any} data state the data
    * @memberof DataCenter
    */
@@ -56,7 +63,7 @@ class DataCenter {
 
 const dataCenter = DataCenter.getInstance();
 
-readJson(filePath.userMember).then((data) => {
+readFile(filePath.userMember).then((data) => {
   dataCenter.setData("userMember", JSON.parse(data));
 });
 
