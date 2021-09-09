@@ -94,7 +94,19 @@ class TelegramClass {
         peer: Number(id),
         message: message,
       })
-    )
+    ).catch(err=>{
+      switch (err.code) {
+        case 420:
+            console.log("發送過於頻繁，請等待:" + err.seconds + "s")
+          break;
+      
+        default:
+          console.log("未知錯誤，如持續發生請通知工程人員");
+          console.log();
+          console.log(err);
+          break;
+      }
+    })
   }
 
 }

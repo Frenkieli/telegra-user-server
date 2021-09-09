@@ -46,7 +46,7 @@ class InterfaceClass {
     let name = dataCenter.getData("user").name || "遊客";
     let option = ["登入", "註冊新成員", "離開"];
     if (name !== "遊客") {
-      option.splice(0, 2, ...["發送訊息", "顯示頻道", "刪除成員"]);
+      option.splice(0, 2, ...["發送訊息", "關閉重複發話", "顯示頻道", "刪除成員"]);
     }
     let selectOption = await input.select(name + " 你好：", option);
 
@@ -380,6 +380,42 @@ class InterfaceClass {
       console.log("尚未有進行中的程序");
       console.log("");
     }
+  }
+
+  async selectRepeatProcess() {
+    let vm = this;
+    let repeatProcess = dataCenter.getData("repeatProcess");
+    let selectOption = false;
+    if (repeatProcess.length >= 1) {
+      selectOption = await input.checkboxes(
+        "請選擇要關閉的程序",
+        [
+          ...repeatProcess.map((data, index)=>{
+            return (index + 1) + "." + 
+                    "檔案名稱:" + data.fileName +
+                    "(" + data.chatList.length + "群)" +
+                    "(" + data.time + "分鐘/次)"
+          }),
+          "取消",
+        ],
+        {
+          validate(answer) {
+            if (answer.length >= 1) return true;
+            return "至少要選擇一個選項";
+          },
+        }
+      );
+      if (selectOption[selectOption.length - 1] === "取消") {
+        console.log("正在跳回主頁，按下 任意建 繼續");
+        await vm.pressToContinue();
+        selectOption = false;
+      }
+    } else {
+      console.log("目前沒有程序，按下 任意建 繼續");
+      await vm.pressToContinue();
+    }
+
+    return selectOption;
   }
 
 

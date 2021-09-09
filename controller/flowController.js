@@ -4,7 +4,6 @@ const dataCenter = require("../dataCenter");
 const telegramItem = require("../modules/telegramItem");
 const fsItem = require("../modules/fsItem");
 const { filePath } = require("../config");
-
 /**
  * @description 流程控制的實體
  *
@@ -51,6 +50,10 @@ class FlowController {
         this.deleteMember();
         break;
 
+      case "關閉重複發話":
+        this.endRepeatProcess();
+        break;
+
       case "顯示頻道":
         this.updateChatList();
         break;
@@ -80,6 +83,8 @@ class FlowController {
         dataCenter.getData("userMember")[member.split(".")[0] - 1];
       if (await telegramItem.login(memberData.number)) {
         dataCenter.setData("user", memberData);
+        let chatList = await telegramItem.getChatList();
+        dataCenter.setData("chatList", chatList.chats);
       }
     }
     this.home();
@@ -184,6 +189,28 @@ class FlowController {
     }
 
     this.home();
+  }
+
+  /**
+   * @description end repeat process
+   *
+   * @memberof FlowController
+   */
+  async endRepeatProcess() {
+
+    await interfaceItem.showRepeatProcess();
+    let selectProcess = await interfaceItem.selectRepeatProcess();
+
+    if(selectProcess) {
+      let repeatProcess = dataCenter.getData("repeatProcess");
+      for(let i = selectProcess.length - 1 ; i >= 0 ; i--) {
+        console.log(selectProcess[i].split('.')[0]);
+        clearInterval(repeatProcess[i].timeoutInstance);
+        repeatProcess.splice(Number(result[i].split(".")[0]) - 1, 1);
+      }
+    }
+
+    this.home(); 
   }
 
   /**
