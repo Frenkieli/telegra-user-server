@@ -62,6 +62,10 @@ class FlowController {
         this.sendMessage();
         break;
 
+      case "監視器模式":
+        this.logMode();
+        break;
+
       case "離開":
         this.leaveApp();
         break;
@@ -171,7 +175,11 @@ class FlowController {
           timeoutInstance: setInterval(() => {
             for(let i = 0 ; i < selectChatOption.length ; i++) {
               setTimeout(() => {
-                telegramItem.sendMessage(selectChatOption[i].split("#chatId=")[1], message);
+                let chatStr = selectChatOption[i].split("#chatId=");
+                telegramItem.sendMessage(chatStr[1], message);
+                chatStr[0] = chatStr[0].split(".");
+                chatStr[0].splice("0", 1);
+                interfaceItem.onLogModeMessage("檔案" + selectMessage.split(".")[1] + ".txt" + "發送至 " + chatStr[0].join(""));
               }, i * 1000);
             }
           }, repeatConfirm * 60 * 1000)
@@ -222,6 +230,17 @@ class FlowController {
     let chatList = await telegramItem.getChatList();
     dataCenter.setData("chatList", chatList.chats);
     interfaceItem.showChatList();
+    this.home();
+  }
+
+  /**
+   * @description in log mode 
+   *
+   * @memberof FlowController
+   */
+  async logMode() {
+    await interfaceItem.logMode();
+
     this.home();
   }
 }

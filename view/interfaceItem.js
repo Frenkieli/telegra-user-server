@@ -46,7 +46,7 @@ class InterfaceClass {
     let name = dataCenter.getData("user").name || "遊客";
     let option = ["登入", "註冊新成員", "離開"];
     if (name !== "遊客") {
-      option.splice(0, 2, ...["發送訊息", "關閉重複發話", "顯示頻道", "刪除成員"]);
+      option.splice(0, 2, ...["發送訊息", "關閉重複發話", "監視器模式", "顯示頻道", "刪除成員"]);
     }
     let selectOption = await input.select(name + " 你好：", option);
 
@@ -416,6 +416,32 @@ class InterfaceClass {
     }
 
     return selectOption;
+  }
+
+
+  /**
+   * @description show log on log mode
+   *
+   * @param {*} message
+   * @memberof InterfaceClass
+   */
+  onLogModeMessage(message, type = 0) {
+    let color = ["\x1b[0m", "\x1b[37m\x1b[41m"];
+    if(dataCenter.getData("onLobMode")) {
+      console.log(color[type], 
+                  message + ". " + new Date().toLocaleString(), 
+                  "\x1b[0m");
+    }
+  }
+
+  async logMode() {
+    this.clearView();
+    dataCenter.setData("onLobMode", true);
+    console.log("按 任意鍵 回到選單")
+    console.log("")
+    await this.pressToContinue();
+    dataCenter.setData("onLobMode", false);
+    return null;
   }
 
 

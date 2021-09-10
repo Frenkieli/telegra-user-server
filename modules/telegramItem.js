@@ -6,6 +6,8 @@ const input = require("input");
 
 const { telegramConfig } = require("../config");
 
+const interfaceItem = require("../view/interfaceItem");
+
 Logger.setLevel("none"); // no logging
 
 /**
@@ -97,13 +99,13 @@ class TelegramClass {
     ).catch(err=>{
       switch (err.code) {
         case 420:
-            console.log("發送過於頻繁，請等待:" + err.seconds + "s")
+          interfaceItem.onLogModeMessage("發送過於頻繁，請等待:" + err.seconds + "s", 1);
           break;
       
         default:
-          console.log("未知錯誤，如持續發生請通知工程人員");
-          console.log();
-          console.log(err);
+          interfaceItem.onLogModeMessage("未知錯誤，如持續發生請通知工程人員", 1);
+          interfaceItem.onLogModeMessage();
+          interfaceItem.onLogModeMessage(err);
           break;
       }
     })

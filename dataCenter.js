@@ -21,6 +21,7 @@ class DataCenter {
     //   timeoutInstance: NodeJS.Timeout 
     // }
     this.state.repeatProcess = [];
+    this.state.onLobMode = false;
   }
 
   static getInstance() {
@@ -33,7 +34,7 @@ class DataCenter {
   /**
    * @description get state data
    *
-   * @param {string} key user | userMember | chatList | repeatProcess
+   * @param {string} key user | userMember | chatList | repeatProcess | onLobMode
    * @return {any} state the data
    * @memberof DataCenter
    */
@@ -44,7 +45,7 @@ class DataCenter {
   /**
    * @description set state data and handle event
    *
-   * @param {string} key user | userMember | chatList | repeatProcess
+   * @param {string} key user | userMember | chatList | repeatProcess | onLobMode
    * @param {any} data state the data
    * @memberof DataCenter
    */
